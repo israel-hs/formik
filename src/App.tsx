@@ -1,4 +1,3 @@
-import FormikForm from "./FormikForm";
 import SigunpForm from "./SignupForm";
 
 import "./App.css";

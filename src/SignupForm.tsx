@@ -1,42 +1,73 @@
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import {
+  Formik,
+  Field,
+  Form,
+  ErrorMessage,
+  FormikHelpers,
+  FormikErrors,
+} from "formik";
+import { TextInput, BetterTextInput } from "./TextInput";
+import { ErrorDiv } from "./styled";
 
-const validate = (values: any) => {
-  const errors: any = {};
+interface Values {
+  email: string;
+  firstName: string;
+  lastName: string;
+  color: string;
+}
+
+const validate = (values: Values) => {
+  const errors: FormikErrors<Values> = {};
   if (!values.firstName) {
     errors.firstName = "Required";
   } else if (values.firstName.length > 15) {
     errors.firstName = "Must be 15 characters or less";
   }
+
+  if (!values.lastName) {
+    errors.lastName = "Required";
+  } else if (values.lastName.length > 20) {
+    errors.lastName = "Must be 20 characters or less";
+  }
+
   return errors;
 };
 
 export default function SigunpForm() {
+  const initialValues: Values = {
+    email: "",
+    firstName: "",
+    lastName: "",
+    color: "red",
+  };
+
+  const handleSubmit = (values: Values, actions: FormikHelpers<Values>) => {
+    console.log(values);
+    actions.setSubmitting(false);
+  };
+
   return (
     <Formik
-      initialValues={{
-        email: "",
-        firstName: "",
-        color: "red",
-      }}
+      initialValues={initialValues}
       validate={validate}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
+      onSubmit={handleSubmit}
     >
       {() => (
         <Form
           style={{
             display: "flex",
+            gap: "5px",
             flexDirection: "column",
             alignItems: "flex-start",
             backgroundColor: "#eee",
           }}
         >
-          <div>
+          <div style={{ display: "flex" }}>
             <label htmlFor="firstName">First Name</label>
             <Field name="firstName" type="text" />
-            <ErrorMessage name="firstName" />
+            <ErrorMessage name="firstName" component={ErrorDiv} />
           </div>
+          <BetterTextInput label="Last Name" name="lastName" />
           <div>
             <label htmlFor="color">Choose a color</label>
             <Field name="color" as="select">
@@ -45,11 +76,14 @@ export default function SigunpForm() {
               <option value="blue">Blue</option>
             </Field>
           </div>
-          <div>
-            <label htmlFor="email">Email Address</label>
-            <Field name="email" type="email" />
-          </div>
-          <button type="submit">Submit</button>
+          <TextInput
+            label="Email Address"
+            name="email"
+            placeholder="enter email"
+          />
+          <button style={{ background: "lightblue" }} type="submit">
+            Submit
+          </button>
         </Form>
       )}
     </Formik>
