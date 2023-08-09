@@ -4,10 +4,11 @@ import {
   Form,
   ErrorMessage,
   FormikHelpers,
-  FormikErrors,
+  // FormikErrors,
 } from "formik";
-import { TextInput, BetterTextInput } from "./TextInput";
+import * as Yup from "yup";
 import { ErrorDiv } from "./styled";
+import { TextInput, BetterTextInput } from "./TextInput";
 
 interface Values {
   email: string;
@@ -16,26 +17,38 @@ interface Values {
   color: string;
 }
 
-const validate = (values: Values) => {
-  const errors: FormikErrors<Values> = {};
-  if (!values.firstName) {
-    errors.firstName = "Required";
-  } else if (values.firstName.length > 15) {
-    errors.firstName = "Must be 15 characters or less";
-  }
-
-  if (!values.lastName) {
-    errors.lastName = "Required";
-  } else if (values.lastName.length > 20) {
-    errors.lastName = "Must be 20 characters or less";
-  }
-
-  return errors;
-};
-
 interface SignupFormProps {
   onSubmit: (values: Values) => void;
 }
+
+const SignupSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .min(2, "Too Short!")
+    .max(15, "Too Long!")
+    .required("First name required"),
+  lastName: Yup.string()
+    .min(2, "Too Short!")
+    .max(20, "Too Long!")
+    .required("Last name Required"),
+  email: Yup.string().email("Invalid email").required("Email Required"),
+});
+
+// const validate = (values: Values) => {
+//   const errors: FormikErrors<Values> = {};
+//   if (!values.firstName) {
+//     errors.firstName = "Required";
+//   } else if (values.firstName.length > 15) {
+//     errors.firstName = "Must be 15 characters or less";
+//   }
+
+//   if (!values.lastName) {
+//     errors.lastName = "Required";
+//   } else if (values.lastName.length > 20) {
+//     errors.lastName = "Must be 20 characters or less";
+//   }
+
+//   return errors;
+// };
 
 export default function SigunpForm({ onSubmit }: SignupFormProps) {
   const initialValues: Values = {
@@ -55,7 +68,8 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
   return (
     <Formik
       initialValues={initialValues}
-      validate={validate}
+      validationSchema={SignupSchema}
+      // validate={validate}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
@@ -83,8 +97,9 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
             </Field>
           </div>
           <TextInput
-            label="Email Address"
+            id="email"
             name="email"
+            label="Email Address"
             placeholder="enter email"
           />
           <button

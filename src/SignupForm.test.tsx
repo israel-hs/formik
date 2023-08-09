@@ -19,6 +19,11 @@ describe("SignupForm", () => {
       screen.getByRole("textbox", { name: /last name/i }),
       "Romero"
     );
+    await user.type(
+      screen.getByRole("textbox", { name: /email/i }),
+      "israel@gmail.com"
+    );
+
     await user.click(submitButton);
     expect(screen.getByRole("button", { name: /submit/i })).toBeDisabled();
     await waitFor(() => {
@@ -26,13 +31,13 @@ describe("SignupForm", () => {
         firstName: "Israel",
         lastName: "Romero",
         color: "red",
-        email: "",
+        email: "israel@gmail.com",
       });
     });
     expect(screen.getByRole("button", { name: /submit/i })).not.toBeDisabled();
   });
 
-  test("shows a Required text when either first name or last name are empty", async () => {
+  test("shows expected error texts when form data is missing", async () => {
     const onSubmit = jest.fn();
     render(<SignupForm onSubmit={onSubmit} />);
     expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
@@ -43,7 +48,11 @@ describe("SignupForm", () => {
       "Israel"
     );
     await user.click(screen.getByRole("button", { name: /submit/i }));
-    expect(screen.getByText(/required/i)).toBeVisible();
+    expect(screen.getAllByText(/required/i)[0]).toBeVisible();
+    expect(screen.getByText(/email required/i)).toBeVisible();
     expect(onSubmit).not.toHaveBeenCalled();
+
+    await user.type(screen.getByRole("textbox", { name: /email/i }), "israel");
+    expect(screen.getByText(/invalid email/i)).toBeVisible();
   });
 });
