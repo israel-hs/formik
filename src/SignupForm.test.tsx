@@ -1,15 +1,16 @@
 import userEvent from "@testing-library/user-event";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import SignupForm from "./SignupForm";
 
 describe("SignupForm", () => {
-  test("sends the right data on submit", async () => {
+  test("send expected data on submit & button is disabled accordingly", async () => {
     const onSubmit = jest.fn();
     render(<SignupForm onSubmit={onSubmit} />);
     expect(screen.getByText("First Name")).toBeVisible();
 
     const user = userEvent.setup();
+    const submitButton = screen.getByRole("button", { name: /submit/i });
     await user.type(
       screen.getByRole("textbox", { name: /first name/i }),
       "Israel"
@@ -18,14 +19,17 @@ describe("SignupForm", () => {
       screen.getByRole("textbox", { name: /last name/i }),
       "Romero"
     );
-    await user.click(screen.getByRole("button", { name: /submit/i }));
-
-    expect(onSubmit).toHaveBeenCalledWith({
-      firstName: "Israel",
-      lastName: "Romero",
-      color: "red",
-      email: "",
+    await user.click(submitButton);
+    expect(screen.getByRole("button", { name: /submit/i })).toBeDisabled();
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith({
+        firstName: "Israel",
+        lastName: "Romero",
+        color: "red",
+        email: "",
+      });
     });
+    expect(screen.getByRole("button", { name: /submit/i })).not.toBeDisabled();
   });
 
   test("shows a Required text when either first name or last name are empty", async () => {

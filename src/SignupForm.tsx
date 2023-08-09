@@ -46,8 +46,10 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
   };
 
   const handleSubmit = (values: Values, actions: FormikHelpers<Values>) => {
-    actions.setSubmitting(false);
-    onSubmit(values);
+    setTimeout(() => {
+      onSubmit(values);
+      actions.setSubmitting(false);
+    }, 500); // 500 ms should be enough for the test to pass, 1000 ms makes the test fail
   };
 
   return (
@@ -56,7 +58,7 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
       validate={validate}
       onSubmit={handleSubmit}
     >
-      {() => (
+      {({ isSubmitting }) => (
         <Form
           style={{
             display: "flex",
@@ -85,7 +87,11 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
             name="email"
             placeholder="enter email"
           />
-          <button style={{ background: "lightblue" }} type="submit">
+          <button
+            style={{ background: "lightblue" }}
+            type="submit"
+            disabled={isSubmitting}
+          >
             Submit
           </button>
         </Form>
