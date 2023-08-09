@@ -32,7 +32,7 @@ export function BetterTextInput({
   return (
     <div style={{ display: "flex" }}>
       <label htmlFor={id || name}>{label}</label>
-      <Field type={type} name={name} />
+      <Field id={name} name={name} type={type} />
       <ErrorMessage name={name} component={ErrorDiv} />
     </div>
   );

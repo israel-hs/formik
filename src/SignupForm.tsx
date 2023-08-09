@@ -33,7 +33,11 @@ const validate = (values: Values) => {
   return errors;
 };
 
-export default function SigunpForm() {
+interface SignupFormProps {
+  onSubmit: (values: Values) => void;
+}
+
+export default function SigunpForm({ onSubmit }: SignupFormProps) {
   const initialValues: Values = {
     email: "",
     firstName: "",
@@ -42,8 +46,8 @@ export default function SigunpForm() {
   };
 
   const handleSubmit = (values: Values, actions: FormikHelpers<Values>) => {
-    console.log(values);
     actions.setSubmitting(false);
+    onSubmit(values);
   };
 
   return (
@@ -64,7 +68,7 @@ export default function SigunpForm() {
         >
           <div style={{ display: "flex" }}>
             <label htmlFor="firstName">First Name</label>
-            <Field name="firstName" type="text" />
+            <Field id="firstName" name="firstName" type="text" />
             <ErrorMessage name="firstName" component={ErrorDiv} />
           </div>
           <BetterTextInput label="Last Name" name="lastName" />
