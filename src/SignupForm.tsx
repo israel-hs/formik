@@ -4,17 +4,19 @@ import {
   Form,
   ErrorMessage,
   FormikHelpers,
+  FormikProps,
   // FormikErrors,
 } from "formik";
 import * as Yup from "yup";
 import { ErrorDiv } from "./styled";
 import { TextInput, BetterTextInput } from "./TextInput";
+import { CustomSelect } from "./CustomSelect";
 
-interface Values {
+export interface Values {
   email: string;
   firstName: string;
   lastName: string;
-  color: string;
+  color: "red" | "green" | "blue" | "";
 }
 
 interface SignupFormProps {
@@ -66,51 +68,53 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={SignupSchema}
-      // validate={validate}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form
-          style={{
-            display: "flex",
-            gap: "5px",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            backgroundColor: "#eee",
-          }}
-        >
-          <div style={{ display: "flex" }}>
-            <label htmlFor="firstName">First Name</label>
-            <Field id="firstName" name="firstName" type="text" />
-            <ErrorMessage name="firstName" component={ErrorDiv} />
-          </div>
-          <BetterTextInput label="Last Name" name="lastName" />
-          <div>
-            <label htmlFor="color">Choose a color</label>
-            <Field name="color" as="select">
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-            </Field>
-          </div>
-          <TextInput
-            id="email"
-            name="email"
-            label="Email Address"
-            placeholder="enter email"
-          />
-          <button
-            style={{ background: "lightblue" }}
-            type="submit"
-            disabled={isSubmitting}
+    <>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={SignupSchema}
+        // validate={validate}
+        onSubmit={handleSubmit}
+      >
+        {(props: FormikProps<Values>) => (
+          <Form
+            style={{
+              display: "flex",
+              gap: "5px",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              backgroundColor: "#eee",
+            }}
           >
-            Submit
-          </button>
-        </Form>
-      )}
-    </Formik>
+            <div style={{ display: "flex" }}>
+              <label htmlFor="firstName">First Name</label>
+              <Field id="firstName" name="firstName" type="text" />
+              <ErrorMessage name="firstName" component={ErrorDiv} />
+            </div>
+            <BetterTextInput label="Last Name" id="lastName" name="lastName" />
+            <CustomSelect label="Pick a color" name="color" {...props} />
+            {/* <div>
+              <label htmlFor="color">Choose a color</label>
+              <Field name="color" as="select">
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+              </Field>
+            </div> */}
+            <TextInput
+              name="email"
+              label="Email Address"
+              placeholder="enter email"
+            />
+            <button
+              style={{ background: "lightblue" }}
+              type="submit"
+              disabled={props.isSubmitting}
+            >
+              Submit
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 }

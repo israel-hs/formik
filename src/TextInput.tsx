@@ -18,8 +18,8 @@ export function TextInput({ label, ...props }: any) {
 
 interface BetterTextInputProps {
   label: string;
-  id?: string;
-  name?: string;
+  id: string;
+  name: string;
   type?: "text" | "email" | "password";
 }
 
@@ -31,7 +31,7 @@ export function BetterTextInput({
 }: BetterTextInputProps) {
   return (
     <div style={{ display: "flex" }}>
-      <label htmlFor={id || name}>{label}</label>
+      <label htmlFor={id}>{label}</label>
       <Field id={name} name={name} type={type} />
       <ErrorMessage name={name} component={ErrorDiv} />
     </div>
