@@ -4,8 +4,7 @@ export default {
   },
   testEnvironment: "jsdom",
   moduleNameMapper: {
-    "^.+\\.svg$": "jest-svg-transformer",
-    "^.+\\.(css|less|scss)$": "identity-obj-proxy",
+    "\\.(svg|woff|png|mp3)": "identity-obj-proxy",
   },
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
 };

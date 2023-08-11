@@ -101,6 +101,7 @@ export default function SigunpForm({ onSubmit }: SignupFormProps) {
               </Field>
             </div> */}
             <TextInput
+              id="email"
               name="email"
               label="Email Address"
               placeholder="enter email"
